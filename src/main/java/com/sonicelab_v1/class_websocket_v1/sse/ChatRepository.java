@@ -1,4 +1,4 @@
-package com.sonicelab_v1.class_websocket_v1.chat;
+package com.sonicelab_v1.class_websocket_v1.sse;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

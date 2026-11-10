@@ -1,17 +1,20 @@
-package com.sonicelab_v1.class_websocket_v1.chat;
+package com.sonicelab_v1.class_websocket_v1.sse;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
 
     private final ChatService chatService;
+    private final SseService sseService;
 
     // 채팅 목록 화면 (폴링)
     @GetMapping("/")
@@ -20,17 +23,15 @@ public class ChatController {
         return "index";
     }
 
-    // 채팅 목록 화면 (폴링)
-    @GetMapping("/save-form")
-    public String saveForm(Model model) {
-        return "save-form";
-    }
 
     // 메세지 저장 기능
+    // 비동기 방식으로 처리
     @PostMapping("/chat")
-    public String save(@RequestParam("msg") String msg) {
-        chatService.save(msg);
+    @ResponseBody
+    public ResponseEntity<Void> save(@RequestParam("msg") String msg) {
+        Chat chat = chatService.save(msg);
+        sseService.send(msg);
 
-        return "redirect:/save-form";
+        return ResponseEntity.ok().build();
     }
 }
