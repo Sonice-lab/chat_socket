@@ -1,4 +1,4 @@
-package com.sonicelab_v1.class_websocket_v1.sse;
+package com.sonicelab_v1.class_websocket_v1.websocket;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,24 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ChatController {
 
     private final ChatService chatService;
-    private final SseService sseService;
 
-    // 채팅 목록 화면 (폴링)
+
+    // 채팅 목록 화면 (폴링) -> 화면 출력의 기능
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("chats", chatService.findAll());
         return "index";
     }
 
-
-    // 메세지 저장 기능
-    // 비동기 방식으로 처리
-    @PostMapping("/chat")
-    @ResponseBody
-    public ResponseEntity<Void> save(@RequestParam("msg") String msg) {
-        Chat chat = chatService.save(msg);
-        sseService.send(msg);
-
-        return ResponseEntity.ok().build();
-    }
 }
