@@ -1,4 +1,4 @@
-package com.sonicelab_v1.class_websocket_v1.websocket;
+package com.sonicelab_v1.class_websocket_v1.stomp;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -13,14 +13,15 @@ public class ChatService {
     private final ChatRepository chatRepository;
 
     // 사용자가 들어오면 데이터를 모두 출력한다.
-    public List<Chat> findAll() {
-        Sort asc = Sort.by(Sort.Direction.ASC, "id");
-        return chatRepository.findAll(asc);
+    public List<Chat> findByRoomId(Integer roomId) {
+        return chatRepository.findByRoomId(roomId);
     }
 
     @Transactional
-    public Chat save(String msg) {
+    public Chat save(Integer roomId, String sender, String msg) {
         Chat chat = Chat.builder()
+                .roomId(roomId)
+                .sender(sender)
                 .msg(msg)
                 .build();
         return chatRepository.save(chat);
